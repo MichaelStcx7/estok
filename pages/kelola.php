@@ -33,40 +33,26 @@ if (isset($_GET['id'])) {
 // 2. logika hapus buku
 if (isset($_GET['hapus'])) {
     $id_hapus = (int)$_GET['hapus'];
+    
+    // ngecek buku masih ada yang pinjam atau nggak
+    $stmt_cek_pinjam = $koneksi->prepare("SELECT COUNT(*) FROM peminjaman WHERE id_buku = ? AND tanggal_kembali IS NULL");
+    $stmt_cek_pinjam->bind_param("i", $id_hapus);
+    $stmt_cek_pinjam->execute();
+    $stmt_cek_pinjam->bind_result($count_pinjam);
+    $stmt_cek_pinjam->fetch();
+    $stmt_cek_pinjam->close();
 
-    // Pertama: ambil judul & penulis dari buku yang akan dihapus
-    $stmt_buku = $koneksi->prepare("SELECT judul, penulis FROM buku WHERE id_buku = ? LIMIT 1");
-    $stmt_buku->bind_param("i", $id_hapus);
-    $stmt_buku->execute();
-    $stmt_buku->bind_result($judul_hapus, $penulis_hapus);
-    $stmt_buku->fetch();
-    $stmt_buku->close();
-
-    if (!$judul_hapus) {
-        $msg = "Data buku tidak ditemukan.";
+    if ($count_pinjam > 0) {
+        $msg = "Gagal Hapus: Buku masih ada yang dipinjam!";
     } else {
-        // Cek apakah masih ada peminjaman aktif (berdasarkan judul & penulis)
-        $stmt_cek_pinjam = $koneksi->prepare(
-            "SELECT COUNT(*) FROM peminjaman WHERE judul_buku = ? AND penulis = ? AND tanggal_kembali IS NULL"
-        );
-        $stmt_cek_pinjam->bind_param("ss", $judul_hapus, $penulis_hapus);
-        $stmt_cek_pinjam->execute();
-        $stmt_cek_pinjam->bind_result($count_pinjam);
-        $stmt_cek_pinjam->fetch();
-        $stmt_cek_pinjam->close();
-
-        if ($count_pinjam > 0) {
-            $msg = "Gagal Hapus: Buku masih ada yang dipinjam!";
+        $stmt_hapus = $koneksi->prepare("DELETE FROM buku WHERE id_buku = ?");
+        $stmt_hapus->bind_param("i", $id_hapus);
+        if ($stmt_hapus->execute()) {
+            $msg = "Buku berhasil dihapus.";
         } else {
-            $stmt_hapus = $koneksi->prepare("DELETE FROM buku WHERE id_buku = ?");
-            $stmt_hapus->bind_param("i", $id_hapus);
-            if ($stmt_hapus->execute()) {
-                $msg = "Buku berhasil dihapus.";
-            } else {
-                $msg = "Gagal menghapus buku.";
-            }
-            $stmt_hapus->close();
+            $msg = "Gagal menghapus buku.";
         }
+        $stmt_hapus->close();
     }
 }
 
@@ -148,7 +134,7 @@ $result_buku = $koneksi->query("SELECT id_buku, judul, stok, penulis FROM buku O
                 </div>
 
                 <nav class="side-nav">
-                    <a class="nav-item" href="index.php">
+                    <a class="nav-item" href="../index.php">
                         <span class="icon" aria-hidden="true">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" fill="currentColor"/></svg>
                         </span>

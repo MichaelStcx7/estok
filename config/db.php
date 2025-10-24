@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "stok_buku_sekolah";
+$host = "sql105.infinityfree.com";
+$user = "if0_40224623";
+$pass = "QttsYfA2OOTcrC";
+$db   = "if0_40224623_dbestok";
 
 $koneksi = mysqli_connect($host, $user, $pass, $db);
 

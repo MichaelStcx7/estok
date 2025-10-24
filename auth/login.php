@@ -21,7 +21,7 @@ if (!isset($_SESSION['login']) && isset($_COOKIE['user_remember'])) {
         // otomatis login jika cookie valid
         $_SESSION['login'] = true;
         $_SESSION['username'] = $row_cookie['username']; 
-        header("Location: ../pages/index.php"); 
+        header("Location: ../index.php"); 
         exit;
     } else {
         // hapus cookie jika user tidak ditemukan (mencegah loop)
@@ -58,7 +58,7 @@ if (isset($_POST['login'])) {
             setcookie('user_remember', '', time() - 3600, '/');
         }
         
-        header("Location: ../pages/index.php"); 
+        header("Location: ../index.php"); 
         exit;
     } else {
         $msg = "Username atau password salah!";
@@ -102,7 +102,7 @@ if (isset($_POST['login'])) {
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                                 </svg>
                             </span>
-                            <input id="username" type="text" name="username" placeholder="Michael@gmail.com" required autocomplete="username" />
+                            <input id="username" type="text" name="username" placeholder="Username" required autocomplete="username" />
                         </div>
                     </div>
 

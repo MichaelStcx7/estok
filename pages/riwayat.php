@@ -131,7 +131,7 @@ $stmt_riwayat->close();
                 </div>
 
                 <nav class="side-nav">
-                    <a class="nav-item" href="index.php">
+                    <a class="nav-item" href="../index.php">
                         <span class="icon" aria-hidden="true">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" fill="currentColor"/></svg>
                         </span>
